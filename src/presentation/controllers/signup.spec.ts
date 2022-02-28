@@ -5,11 +5,11 @@ import {
 } from "../errors";
 import { SignupController } from "./signup";
 import { EmailValidator } from "../protocols";
-
-interface SutTypes {
-  sut: SignupController;
-  emailValidatorStub: EmailValidator;
-}
+import { AccountModel } from "../../domain/models/account";
+import {
+  AddAccount,
+  AddAccountModel,
+} from "../../domain/useCases/add-account";
 
 const makeEmailValidator = (): EmailValidator => {
   class EmailValidatorStub implements EmailValidator {
@@ -21,12 +21,36 @@ const makeEmailValidator = (): EmailValidator => {
   return new EmailValidatorStub();
 };
 
+const makeAddAccount = (): AddAccount => {
+  class AddAccountStub implements AddAccount {
+    // stub duble de test (função que retorna algo estático)
+    add(account: AddAccountModel): AccountModel {
+      const fakeAccount = {
+        id: "valid_id",
+        name: "valid_name",
+        email: "valid_email@mail.com",
+        password: "valid_password",
+      };
+      return fakeAccount;
+    }
+  }
+  return new AddAccountStub();
+};
+
+interface SutTypes {
+  sut: SignupController;
+  emailValidatorStub: EmailValidator;
+  addAccountStub: AddAccount;
+}
+
 const makeSut = (): SutTypes => {
   const emailValidatorStub = makeEmailValidator();
-  const sut = new SignupController(emailValidatorStub);
+  const addAccountStub = makeAddAccount();
+  const sut = new SignupController(emailValidatorStub, addAccountStub);
   return {
     sut,
     emailValidatorStub,
+    addAccountStub,
   };
 };
 
@@ -123,5 +147,17 @@ describe("Signup Controller", () => {
     const httpResponse = sut.handle(httpRequest);
     expect(httpResponse.statusCode).toBe(500);
     expect(httpResponse.body).toEqual(new ServerError());
+  });
+
+  it("Should call addAccount with correct values", () => {
+    const { sut, addAccountStub } = makeSut(); // system under test (test focal point)
+    const addSpy = jest.spyOn(addAccountStub, "add");
+    const httpRequest = { body: { ...testParams } };
+    const callParams = { ...testParams };
+    delete callParams.passwordConfirmation;
+
+    sut.handle(httpRequest);
+
+    expect(addSpy).toHaveBeenCalledWith(callParams);
   });
 });
