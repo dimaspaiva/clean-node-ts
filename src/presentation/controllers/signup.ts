@@ -8,7 +8,7 @@ export class SignupController {
       "name",
       "email",
       "password",
-      "passowrdConfirmation",
+      "passwordConfirmation",
     ];
 
     for (const field of requiredFields) {
