@@ -35,7 +35,7 @@ describe("Signup Controller", () => {
     name: "John Doe",
     email: "doe@mail.com",
     password: "123456",
-    passwordConfirmation: "1234561",
+    passwordConfirmation: "123456",
   };
 
   it("Should return 400 if no name is provided", () => {
@@ -77,6 +77,18 @@ describe("Signup Controller", () => {
     expect(httpResponse.statusCode).toBe(400);
     expect(httpResponse.body).toEqual(
       new MissingParamError("passwordConfirmation")
+    );
+  });
+
+  it("Should return 400 if password confirmation fails", () => {
+    const { sut } = makeSut(); // system under test (test focal point)
+    const httpRequest = { body: { ...testParams } };
+    httpRequest.body.passwordConfirmation = "invalid_password";
+
+    const httpResponse = sut.handle(httpRequest);
+    expect(httpResponse.statusCode).toBe(400);
+    expect(httpResponse.body).toEqual(
+      new InvalidParamError("passwordConfirmation")
     );
   });
 
