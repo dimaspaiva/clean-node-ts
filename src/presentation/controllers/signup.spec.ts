@@ -1,5 +1,9 @@
-import { MissingParamError } from "../errors/missing-param-erros";
+import { MissingParamError } from "../errors/missing-param-error";
 import { SignupController } from "./signup";
+
+const makeSut = (): SignupController => {
+  return new SignupController();
+};
 
 describe("Signup Controller", () => {
   const testParams = {
@@ -10,7 +14,7 @@ describe("Signup Controller", () => {
   };
 
   it("Should return 400 if no name is provided", () => {
-    const sut = new SignupController(); // system under test (test focal point)
+    const sut = makeSut(); // system under test (test focal point)
     const httpRequest = { body: { ...testParams } };
     delete httpRequest.body.name;
 
@@ -20,7 +24,7 @@ describe("Signup Controller", () => {
   });
 
   it("Should return 400 if no email is provided", () => {
-    const sut = new SignupController(); // system under test (test focal point)
+    const sut = makeSut(); // system under test (test focal point)
     console.log(testParams);
     const httpRequest = { body: { ...testParams } };
     delete httpRequest.body.email;
@@ -31,7 +35,7 @@ describe("Signup Controller", () => {
   });
 
   it("Should return 400 if no password is provided", () => {
-    const sut = new SignupController(); // system under test (test focal point)
+    const sut = makeSut(); // system under test (test focal point)
     const httpRequest = { body: { ...testParams } };
     delete httpRequest.body.password;
 
@@ -41,7 +45,7 @@ describe("Signup Controller", () => {
   });
 
   it("Should return 400 if no password confirmation is provided", () => {
-    const sut = new SignupController(); // system under test (test focal point)
+    const sut = makeSut(); // system under test (test focal point)
     const httpRequest = { body: { ...testParams } };
     delete httpRequest.body.passowrdConfirmation;
 
