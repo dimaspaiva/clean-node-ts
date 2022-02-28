@@ -2,15 +2,17 @@ import { MissingParamError } from "../errors/missing-param-erros";
 import { SignupController } from "./signup";
 
 describe("Signup Controller", () => {
+  const testParams = {
+    name: "John Doe",
+    email: "doe@mail.com",
+    password: "123456",
+    passowrdConfirmation: "1234561",
+  };
+
   it("Should return 400 if no name is provided", () => {
     const sut = new SignupController(); // system under test (test focal point)
-    const httpRequest = {
-      body: {
-        email: "doe@mail.com",
-        password: "123456",
-        passowrdConfirmation: "1234561",
-      },
-    };
+    const httpRequest = { body: { ...testParams } };
+    delete httpRequest.body.name;
 
     const httpResponse = sut.handle(httpRequest);
     expect(httpResponse.statusCode).toBe(400);
@@ -19,13 +21,9 @@ describe("Signup Controller", () => {
 
   it("Should return 400 if no email is provided", () => {
     const sut = new SignupController(); // system under test (test focal point)
-    const httpRequest = {
-      body: {
-        name: "John Doe",
-        password: "123456",
-        passowrdConfirmation: "1234561",
-      },
-    };
+    console.log(testParams);
+    const httpRequest = { body: { ...testParams } };
+    delete httpRequest.body.email;
 
     const httpResponse = sut.handle(httpRequest);
     expect(httpResponse.statusCode).toBe(400);
