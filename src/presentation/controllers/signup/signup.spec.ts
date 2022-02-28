@@ -160,4 +160,18 @@ describe("Signup Controller", () => {
 
     expect(addSpy).toHaveBeenCalledWith(callParams);
   });
+
+  it("Should return 500 if EmailValidator throws", () => {
+    const { sut, addAccountStub } = makeSut();
+    jest.spyOn(addAccountStub, "add").mockImplementation(() => {
+      throw new Error();
+    });
+    const httpRequest = { body: { ...testParams } };
+    const callParams = { ...testParams };
+    delete callParams.passwordConfirmation;
+
+    const httpResponse = sut.handle(httpRequest);
+    expect(httpResponse.statusCode).toBe(500);
+    expect(httpResponse.body).toEqual(new ServerError());
+  });
 });
