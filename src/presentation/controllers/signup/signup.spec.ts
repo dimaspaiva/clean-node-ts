@@ -11,6 +11,13 @@ import {
   EmailValidator,
 } from "./signup-protocols";
 
+const testParams = {
+  name: "John Doe",
+  email: "doe@mail.com",
+  password: "123456",
+  passwordConfirmation: "123456",
+};
+
 const makeEmailValidator = (): EmailValidator => {
   class EmailValidatorStub implements EmailValidator {
     // stub duble de test (função que retorna algo estático)
@@ -27,9 +34,9 @@ const makeAddAccount = (): AddAccount => {
     add(account: AddAccountModel): AccountModel {
       const fakeAccount = {
         id: "valid_id",
-        name: "valid_name",
-        email: "valid_email@mail.com",
-        password: "valid_password",
+        name: testParams.name,
+        email: testParams.email,
+        password: testParams.password,
       };
       return fakeAccount;
     }
@@ -55,13 +62,6 @@ const makeSut = (): SutTypes => {
 };
 
 describe("Signup Controller", () => {
-  const testParams = {
-    name: "John Doe",
-    email: "doe@mail.com",
-    password: "123456",
-    passwordConfirmation: "123456",
-  };
-
   it("Should return 400 if no name is provided", () => {
     const { sut } = makeSut(); // system under test (test focal point)
     const httpRequest = { body: { ...testParams } };
@@ -173,5 +173,19 @@ describe("Signup Controller", () => {
     const httpResponse = sut.handle(httpRequest);
     expect(httpResponse.statusCode).toBe(500);
     expect(httpResponse.body).toEqual(new ServerError());
+  });
+
+  it("Should return 200 if valid data is provided", () => {
+    const { sut } = makeSut(); // system under test (test focal point)
+    const httpRequest = { body: { ...testParams } };
+
+    const httpResponse = sut.handle(httpRequest);
+    expect(httpResponse.statusCode).toBe(200);
+    expect(httpResponse.body).toEqual({
+      id: "valid_id",
+      name: testParams.name,
+      email: testParams.email,
+      password: testParams.password,
+    });
   });
 });
