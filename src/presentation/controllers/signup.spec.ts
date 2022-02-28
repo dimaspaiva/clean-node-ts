@@ -4,7 +4,7 @@ import {
   ServerError,
 } from "../errors";
 import { SignupController } from "./signup";
-import { EmailValidator } from "../protocols/emailValidator";
+import { EmailValidator } from "../protocols";
 
 interface SutTypes {
   sut: SignupController;
