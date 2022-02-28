@@ -3,7 +3,7 @@ export interface HTTPResponse {
   body: any;
 }
 
-export interface httpRequest {
+export interface HTTPRequest {
   body?: {
     [key: string]: any;
   };
