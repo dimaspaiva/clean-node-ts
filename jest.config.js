@@ -6,4 +6,6 @@ module.exports = {
   transform: {
     ".+\\.ts$": "ts-jest",
   },
+  collectCoverageFrom: ["**/*.ts"],
+  coveragePathIgnorePatterns: ["/node_modules/", ".+\\.d.ts$"],
 };
