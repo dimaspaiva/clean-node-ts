@@ -8,4 +8,5 @@ module.exports = {
   },
   collectCoverageFrom: ["**/*.ts"],
   coveragePathIgnorePatterns: ["/node_modules/", ".+\\.d.ts$"],
+  preset: '@shelf/jest-mongodb',
 };
