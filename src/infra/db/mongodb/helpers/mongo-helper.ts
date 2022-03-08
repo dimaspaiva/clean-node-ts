@@ -24,4 +24,12 @@ export class MongoHelper {
   getCollection(name: string): Collection {
     return this.client.db().collection(name);
   }
+
+  mapCollection(account: any): any {
+    const { _id: id, ...collectionWithoutId } = account;
+    return {
+      id,
+      ...collectionWithoutId,
+    };
+  }
 }
