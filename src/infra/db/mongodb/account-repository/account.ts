@@ -1,5 +1,8 @@
 import { AddAccountRepository } from "../../../../data/protocols/add-account-repository";
-import { AccountModel } from "../../../../domain/models/account";
+import {
+  AccountModel,
+  AccountMongoModel,
+} from "../../../../domain/models/account";
 import { AddAccountModel } from "../../../../domain/useCases/add-account";
 import { MongoHelper } from "../helpers/mongo-helper";
 
@@ -8,8 +11,14 @@ export class AccountMongoRepository implements AddAccountRepository {
     const accountCollection =
       MongoHelper.getInstance().getCollection("accounts");
     const result = await accountCollection.insertOne(accountData);
-    return await accountCollection.findOne<AccountModel>({
+    const account = await accountCollection.findOne<AccountMongoModel>({
       _id: result.insertedId,
     });
+
+    const { _id: id, ...accountWithoutId } = account;
+    return {
+      id,
+      ...accountWithoutId,
+    };
   }
 }

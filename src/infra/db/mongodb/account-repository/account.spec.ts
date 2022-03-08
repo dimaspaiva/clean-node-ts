@@ -22,7 +22,7 @@ describe("Account Mongo Repository", () => {
     const account = await sut.add(accountValues);
 
     expect(account).toBeTruthy();
-    expect(account).toHaveProperty("_id");
+    expect(account).toHaveProperty("id");
     expect(account.name).toBe(accountValues.name);
     expect(account.email).toBe(accountValues.email);
     expect(account.password).toBe(accountValues.password);
