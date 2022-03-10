@@ -14,7 +14,7 @@ export class MongoHelper {
   }
 
   async connect(url: string) {
-    this.client = await MongoClient.connect(process.env.MONGO_URL);
+    this.client = await MongoClient.connect(url);
   }
 
   async disconnect() {
